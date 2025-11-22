@@ -29,14 +29,12 @@ with col_title_center:
     # and thus, centered on the page.
     st.markdown(
         """
-        <h1 style='text-align: center;'>One Mission: \n
-        Empowering Your Everyday</h1>
+        <h1 style='text-align: center;'>One Mission: \nEmpowering Your Everyday</h1>
         """, 
         unsafe_allow_html=True
     )
 
 st.markdown("---")
-
 
 # --- IMAGE BLOCK: Streamlit Native Centering and Sizing (FINAL FIX) ---
 
