@@ -68,7 +68,20 @@ if "last_statuses" not in st.session_state:
         "Weather": True, "PSI": True, "UV": True, "Dengue": True
     }
     
-# Placeholder for check_password function that is missing but assumed to be here
+# Placeholder functions for dependencies used in the re-added widget
+def logout():
+    """Resets authentication state and messages."""
+    st.session_state["authenticated"] = False
+    st.session_state["messages"] = []
+    st.rerun()
+
+def display_api_status(name, status):
+    """Displays API status in the sidebar."""
+    if status:
+        st.sidebar.success(f"🟢 {name}: OK")
+    else:
+        st.sidebar.error(f"🔴 {name}: FAIL")
+
 def check_password():
     # Placeholder: In a real app, this would handle authentication
     return True 
@@ -78,8 +91,6 @@ def check_password():
 # ====================================================================================
 
 def chatbot_interface():
-    # Placeholder for sidebar logic
-    st.sidebar.markdown("# SteadyDayEveryday")
     
     # --- 1. Title Section (Centered and Single Line Fix) ---
     col_title_left, col_title_center, col_title_right = st.columns([0.4, 1, 0.4])
@@ -96,14 +107,15 @@ def chatbot_interface():
     # st.divider() renders the <hr> tag, which now has reduced margins from the CSS above.
     st.divider()
 
-    # --- 2. Image Section ---
+    # --- 2. Image Section (FIXED: Centering the Image) ---
+    # Use three columns with symmetrical side columns to create a centered image area.
     col_spacer_left, col_image_center, col_spacer_right = st.columns([1, 3, 1]) 
     
     with col_image_center:
         # The image will now be centered in the middle column and use its full width 
         st.image("jagabotwmap.png", use_column_width="always") 
-
-    # --- 3. Sidebar Enhancements ---
+        
+    # --- 3. Sidebar Enhancements (RE-ADDED) ---
     st.sidebar.button("Logout", on_click=logout)
     st.sidebar.markdown("---")
     st.sidebar.subheader("Live Data Status 🌐")
