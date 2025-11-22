@@ -118,7 +118,7 @@ def chatbot_interface():
     # --- 3. Sidebar Enhancements (RE-ADDED) ---
     st.sidebar.button("Logout", on_click=logout)
     st.sidebar.markdown("---")
-    st.sidebar.subheader("Live Data Status 🌐")
+    st.sidebar.subheader("Live API Status 🌐")
     
     # Display the status indicators based on the last query
     display_api_status("Weather Forecast", st.session_state.last_statuses["Weather"])
