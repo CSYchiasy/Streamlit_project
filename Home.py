@@ -131,7 +131,7 @@ def check_password():
     col_left, col_center, col_right = st.columns([1, 1, 1])
     
     with col_center:
-        st.title("SteadyDayEveryDay With Jagabot")
+        st.title("Portal Access")
         st.subheader("Login Required")
         st.text_input(
             "Enter Password", type="password", on_change=password_entered, key="password"
@@ -200,11 +200,15 @@ def chatbot_interface():
     display_api_status("UV Index", st.session_state.last_statuses["UV"])
     display_api_status("Dengue Clusters", st.session_state.last_statuses["Dengue"])
     
-    # --- 4. Chat History Display ---
-    # Use a container to manage the chat history height if needed, otherwise display naturally
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+    # --- 4. Chat History Display (FIXED: Using fixed-height container) ---
+    # By placing the chat history inside a fixed-height container, it scrolls, 
+    # ensuring the input box and instructions remain visible below it.
+    chat_container = st.container(height=550) 
+    
+    with chat_container:
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
     # --- 5. User Instructions (Centralized and HTML Fix) ---
     st.markdown(
