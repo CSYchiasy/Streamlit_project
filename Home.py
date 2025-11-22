@@ -97,17 +97,17 @@ def chatbot_interface():
     st.divider()
 
     # --- 2. Image Section ---
-    col_img_left, col_img_center, col_img_right = st.columns([3, 1, 1]) 
+    col_spacer_left, col_image_center, col_spacer_right = st.columns([1, 3, 1]) 
     
-    with col_img_left:
-        # Assuming the image file exists in the correct location
+    with col_image_center:
+        # The image will now be centered in the middle column and use its full width 
         st.image("jagabotwmap.png", use_column_width="always") 
     
     # --- 3. Chat History Display ---
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
-            
+
     # --- 4. User Instructions (FIXED: Converting Markdown to HTML for guaranteed styling) ---
     st.markdown(
         """
