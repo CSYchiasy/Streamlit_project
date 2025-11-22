@@ -75,13 +75,77 @@ if "last_statuses" not in st.session_state:
         "Weather": True, "PSI": True, "UV": True, "Dengue": True
     }
     
-# Placeholder functions for dependencies used in the re-added widget
+# ====================================================================================
+# INITIALIZE RAG COMPONENTS (Only once via Streamlit caching)
+# ====================================================================================
+
+@st.cache_resource
+def initialize_rag():
+    """Load RAG components once at app startup."""
+    with st.spinner("⏳ Loading AI and environmental data..."):
+        return load_rag_components()
+
+# ====================================================================================
+# AUTHENTICATION LOGIC
+# ====================================================================================
+
 def logout():
-    """Resets authentication state and messages."""
+    """Logs out the user and clears session state."""
     st.session_state["authenticated"] = False
+    st.session_state["password_correct"] = False
     st.session_state["messages"] = []
     st.rerun()
 
+def check_password():
+    """Returns `True` if the user had the correct password."""
+    
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        try:
+            # Assuming you have a secret named "password" in your secrets.toml file
+            secret_password = st.secrets["password"]
+        except KeyError:
+            # Fallback for environments without secrets.toml
+            secret_password = "password123" # Use a fallback if st.secrets is unavailable
+
+        # Check against the secure secret
+        if hmac.compare_digest(st.session_state["password"], secret_password):
+            st.session_state["password_correct"] = True
+            st.session_state["authenticated"] = True
+            del st.session_state["password"]  # Don't store the password
+            if not st.session_state.messages: # Only greet on first successful login
+                st.session_state.messages.append({
+                    "role": "assistant", 
+                    "content": "Hello! I'm Jagabot, your environmental assistant. How can I help you today?"
+                })
+        else:
+            st.session_state["password_correct"] = False
+            st.session_state["authenticated"] = False
+            
+    # Return True if the password is validated
+    if st.session_state.get("password_correct", False):
+        return True
+
+    # Show input for password
+    # Center the login form visually
+    col_left, col_center, col_right = st.columns([1, 1, 1])
+    
+    with col_center:
+        st.title("Portal Access")
+        st.subheader("Login Required")
+        st.text_input(
+            "Enter Password", type="password", on_change=password_entered, key="password"
+        )
+        
+        # Display the incorrect password error
+        if "password_correct" in st.session_state and not st.session_state["password_correct"]:
+            st.error("😕 Password incorrect")
+        
+    return False
+
+# ====================================================================================
+# HELPER FUNCTIONS (for sidebar)
+# ====================================================================================
 def display_api_status(name, status):
     """Displays API status in the sidebar."""
     if status:
@@ -89,15 +153,18 @@ def display_api_status(name, status):
     else:
         st.sidebar.error(f"🔴 {name}: FAIL")
 
-def check_password():
-    # Placeholder: In a real app, this would handle authentication
-    return True 
-
 # ====================================================================================
 # CHATBOT INTERFACE FUNCTION
 # ====================================================================================
 
 def chatbot_interface():
+    
+    # RAG components are loaded here after successful authentication
+    rag_components = initialize_rag()
+    llm = rag_components["llm"]
+    retriever = rag_components["retriever"]
+    historical_psi_df = rag_components["historical_psi_df"]
+    historical_uv_df = rag_components["historical_uv_df"]
     
     # --- 1. Title Section (Centered and Single Line Fix) ---
     col_title_left, col_title_center, col_title_right = st.columns([0.4, 1, 0.4])
@@ -134,6 +201,7 @@ def chatbot_interface():
     display_api_status("Dengue Clusters", st.session_state.last_statuses["Dengue"])
     
     # --- 4. Chat History Display ---
+    # Use a container to manage the chat history height if needed, otherwise display naturally
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -144,7 +212,7 @@ def chatbot_interface():
         <div class="prompt-hint">
             <b>💡 How to Query:</b> For the best results, please specify the <b>time, date</b> (if a forecast), <b>region</b>, and intended activity.
             <br>
-            <i>Example: "I am planning to have a picnic in Jurong at 3 PM tomorrow?"</i>
+            <i>Example: "I am planning to <b>have a picnic</b> in <b>Jurong</b> at <b>3 PM tomorrow</b>?"</i>
         </div>
         """,
         unsafe_allow_html=True
@@ -164,12 +232,6 @@ def chatbot_interface():
             with st.spinner("Generating detailed environmental report..."):
                 # Run the RAG query logic
                 try:
-                    components = load_rag_components() 
-                    retriever = components["retriever"]
-                    historical_psi_df = components["historical_psi_df"]
-                    historical_uv_df = components["historical_uv_df"]
-                    llm = components["llm"]
-                    
                     result = run_rag_query(
                         user_query=prompt, 
                         retriever=retriever, 

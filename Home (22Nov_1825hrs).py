@@ -1,7 +1,12 @@
+"""
+SteadyDayEveryday - Environmental Information Bot for Singapore
+A Streamlit app that provides real-time weather, air quality, UV index, and dengue alert information
+using RAG (Retrieval-Augmented Generation) with LangChain and OpenAI.
+"""
+
 import streamlit as st
 import hmac
-# Assuming logics.py contains these functions
-from logics import load_rag_components, run_rag_query 
+from logics import load_rag_components, run_rag_query
 
 # ====================================================================================
 # PAGE CONFIGURATION
@@ -15,7 +20,7 @@ st.set_page_config(
 )
 
 # ====================================================================================
-# CUSTOM CSS (Includes spacing and prompt hint styling)
+# CUSTOM CSS
 # ====================================================================================
 
 st.markdown("""
@@ -35,29 +40,6 @@ st.markdown("""
         text-align: center;
         font-size: 0.8em;
     }
-    /* --- CSS FIX: Reduce margins around the horizontal divider (hr) --- */
-    hr {
-        margin-top: 0.5rem; 
-        margin-bottom: 0.5rem; 
-    }
-    /* Custom style for the prompt hint (Instructions box) */
-    .prompt-hint {
-        padding: 10px;
-        /* FIX: Added max-width and margins for centering */
-        max-width: 800px; /* Limit width so it doesn't span full page */
-        margin-left: auto;
-        margin-right: auto;
-        /* END FIX */
-        
-        /* REDUCED MARGINS for better fit above chat input */
-        margin-top: 10px; 
-        margin-bottom: 10px; 
-        border-radius: 8px;
-        background-color: #f0f2f6; /* Light gray background */
-        border-left: 5px solid #007bff; /* Blue accent bar */
-        /* FIX: Increased font size for better visibility */
-        font-size: 1.1em; 
-    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -69,12 +51,11 @@ if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
-# Placeholder for API status (Defaulting to True until first query)
 if "last_statuses" not in st.session_state:
     st.session_state.last_statuses = {
         "Weather": True, "PSI": True, "UV": True, "Dengue": True
     }
-    
+
 # ====================================================================================
 # INITIALIZE RAG COMPONENTS (Only once via Streamlit caching)
 # ====================================================================================
@@ -85,16 +66,11 @@ def initialize_rag():
     with st.spinner("⏳ Loading AI and environmental data..."):
         return load_rag_components()
 
+rag_components = initialize_rag()
+
 # ====================================================================================
 # AUTHENTICATION LOGIC
 # ====================================================================================
-
-def logout():
-    """Logs out the user and clears session state."""
-    st.session_state["authenticated"] = False
-    st.session_state["password_correct"] = False
-    st.session_state["messages"] = []
-    st.rerun()
 
 def check_password():
     """Returns `True` if the user had the correct password."""
@@ -102,22 +78,20 @@ def check_password():
     def password_entered():
         """Checks whether a password entered by the user is correct."""
         try:
-            # Assuming you have a secret named "password" in your secrets.toml file
             secret_password = st.secrets["password"]
         except KeyError:
-            # Fallback for environments without secrets.toml
-            secret_password = "password123" # Use a fallback if st.secrets is unavailable
+            st.error("Configuration Error: 'password' secret not found in secrets.toml.")
+            return
 
         # Check against the secure secret
         if hmac.compare_digest(st.session_state["password"], secret_password):
             st.session_state["password_correct"] = True
             st.session_state["authenticated"] = True
             del st.session_state["password"]  # Don't store the password
-            if not st.session_state.messages: # Only greet on first successful login
-                st.session_state.messages.append({
-                    "role": "assistant", 
-                    "content": "Hello! I'm Jagabot, your environmental assistant. How can I help you today?"
-                })
+            st.session_state.messages.append({
+                "role": "assistant", 
+                "content": "Hello! I'm Jagabot, your environmental assistant. How can I help you today?"
+            })
         else:
             st.session_state["password_correct"] = False
             st.session_state["authenticated"] = False
@@ -127,69 +101,75 @@ def check_password():
         return True
 
     # Show input for password
-    # Center the login form visually
-    col_left, col_center, col_right = st.columns([1, 1, 1])
+    st.text_input(
+        "Password", type="password", on_change=password_entered, key="password"
+    )
     
-    with col_center:
-        st.title("Portal Access")
-        st.subheader("Login Required")
-        st.text_input(
-            "Enter Password", type="password", on_change=password_entered, key="password"
-        )
-        
-        # Display the incorrect password error
-        if "password_correct" in st.session_state and not st.session_state["password_correct"]:
-            st.error("😕 Password incorrect")
+    # Display the incorrect password error
+    if "password_correct" in st.session_state and not st.session_state["password_correct"]:
+        st.error("😕 Password incorrect")
         
     return False
 
-# ====================================================================================
-# HELPER FUNCTIONS (for sidebar)
-# ====================================================================================
-def display_api_status(name, status):
-    """Displays API status in the sidebar."""
-    if status:
-        st.sidebar.success(f"🟢 {name}: OK")
-    else:
-        st.sidebar.error(f"🔴 {name}: FAIL")
+def logout():
+    """Logs out the user and clears session state."""
+    st.session_state["authenticated"] = False
+    st.session_state["password_correct"] = False
+    st.session_state["messages"] = []
+    st.rerun()
 
 # ====================================================================================
-# CHATBOT INTERFACE FUNCTION
+# HELPER FUNCTIONS
+# ====================================================================================
+
+def display_api_status(name: str, status: bool):
+    """Displays a colored status based on a boolean flag."""
+    if status:
+        st.markdown(f"**✅ {name}**", help="API connection successful.")
+    else:
+        st.markdown(f"**❌ {name}**", help="API connection failed. Showing historical data only.")
+
+# ====================================================================================
+# MAIN CHATBOT INTERFACE
 # ====================================================================================
 
 def chatbot_interface():
+    """Display the RAG chatbot interface with enhanced layout."""
     
-    # RAG components are loaded here after successful authentication
-    rag_components = initialize_rag()
+    # Extract components from the cached dictionary
     llm = rag_components["llm"]
     retriever = rag_components["retriever"]
     historical_psi_df = rag_components["historical_psi_df"]
     historical_uv_df = rag_components["historical_uv_df"]
     
-    # --- 1. Title Section (Centered and Single Line Fix) ---
-    col_title_left, col_title_center, col_title_right = st.columns([0.4, 1, 0.4])
-
-    with col_title_center:
-        st.markdown(
-            # Using h1 tag with CSS to ensure centering and large font
-            """
-            <h1 style='text-align: center;'>One Mission: Empowering Your Everyday</h1>
-            """, 
-            unsafe_allow_html=True
-        )
-
-    # st.divider() renders the <hr> tag, which now has reduced margins from the CSS above.
-    st.divider()
-
-    # --- 2. Image Section (FIXED: Centering the Image) ---
-    # Use three columns with symmetrical side columns to create a centered image area.
-    col_spacer_left, col_image_center, col_spacer_right = st.columns([1, 3, 1]) 
+    # --- 1. Top Section Layout (Title and Status) ---
+    col1, col2 = st.columns([4, 1])
     
-    with col_image_center:
-        # The image will now be centered in the middle column and use its full width 
-        st.image("jagabotwmap.png", use_column_width="always") 
+    with col1:
+        st.title("☀️ SteadyDayEveryday with Jagabot ☀️")
+        st.markdown("Here to jaga your day!")
+    
+    with col2:
+        # Overall Status Light 
+        st.markdown("<div style='padding-top: 15px;'>", unsafe_allow_html=True)
+        overall_status = all(st.session_state.last_statuses.values())
+        if overall_status:
+            st.success("STATUS: Live Data OK")
+        else:
+            st.warning("STATUS: API Error")
+        st.markdown("</div>", unsafe_allow_html=True)
         
-    # --- 3. Sidebar Enhancements (RE-ADDED) ---
+    st.markdown("---")  # Visual separator
+
+    # --- 2. Image Section ---
+    col_img_left, col_img_center, col_img_right = st.columns([3, 1, 1]) 
+    
+    with col_img_left:
+        st.image("jagabotwmap.png", use_column_width="always")
+        
+    st.markdown("---")
+    
+    # --- 3. Sidebar Enhancements ---
     st.sidebar.button("Logout", on_click=logout)
     st.sidebar.markdown("---")
     st.sidebar.subheader("Live Data Status 🌐")
@@ -200,40 +180,48 @@ def chatbot_interface():
     display_api_status("UV Index", st.session_state.last_statuses["UV"])
     display_api_status("Dengue Clusters", st.session_state.last_statuses["Dengue"])
     
-    # --- 4. Chat History Display ---
-    # Use a container to manage the chat history height if needed, otherwise display naturally
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
 
-    # --- 5. User Instructions (Centralized and HTML Fix) ---
+    # --- 4. Chat History Container (Main Content Area) ---
+    chat_container = st.container(height=550) 
+    
+    with chat_container:
+        # Display chat messages from history
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+    
+    # --- 5. User Instructions (NEW ADDITION) ---
+    # Add a prominent box instructing the user on how to query
     st.markdown(
         """
         <div class="prompt-hint">
-            <b>💡 How to Query:</b> For the best results, please specify the <b>time, date</b> (if a forecast), <b>region</b>, and intended activity.
-            <br>
-            <i>Example: "I am planning to <b>have a picnic</b> in <b>Jurong</b> at <b>3 PM tomorrow</b>?"</i>
+        **💡 How to Query:** For the best results, please specify the **time, date **, **region** and intended activity.
+        <br>
+        *Example: "I am planning to **have a picnic** in **Jurong** at **3 PM tomorrow**?"*
         </div>
         """,
         unsafe_allow_html=True
     )
-    
-    # --- 6. Chat Input and Logic ---
-    if prompt := st.chat_input("Ask about the weather, PSI, UV, or dengue risk..."):
+
+    # --- 6. Handle User Input ---
+    default_prompt = "I am planning to go dragonboating at Kallang tomorrow around 11am. What should I be aware of?"
+    if prompt := st.chat_input(default_prompt):
+        
         # Add user message to history
         st.session_state.messages.append({"role": "user", "content": prompt})
-        
-        # Display the user message
-        with st.chat_message("user"):
-            st.markdown(prompt)
+        # Rerun to show new user message immediately
+        st.rerun() 
 
-        # Display the "Generating..." spinner
+    # Process and display assistant response
+    if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
+        
         with st.chat_message("assistant"):
-            with st.spinner("Generating detailed environmental report..."):
-                # Run the RAG query logic
+            with st.spinner("Generating environmental report..."):
                 try:
+                    # Call RAG function
                     result = run_rag_query(
-                        user_query=prompt, 
+                        user_query=st.session_state.messages[-1]["content"], 
                         retriever=retriever, 
                         historical_psi_df=historical_psi_df, 
                         historical_uv_df=historical_uv_df, 
@@ -257,7 +245,7 @@ def chatbot_interface():
 
         # Add assistant response to history
         st.session_state.messages.append({"role": "assistant", "content": response_content})
-        # Rerun to clear the spinner and finalize the display
+        # Rerun to finalize the display
         st.rerun()
 
     # --- 7. Footer ---
@@ -270,7 +258,7 @@ def chatbot_interface():
 # ====================================================================================
 # MAIN APP EXECUTION
 # ====================================================================================
-    
+
 if not check_password():
     st.stop()
     
