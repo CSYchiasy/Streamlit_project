@@ -29,7 +29,8 @@ with col_title_center:
     # and thus, centered on the page.
     st.markdown(
         """
-        <h1 style='text-align: center;'>One Mission: \nEmpowering Your Everyday</h1>
+        <h1 style='text-align: center;'>One Mission:
+        Empowering Your Everyday</h1>
         """, 
         unsafe_allow_html=True
     )
