@@ -21,7 +21,7 @@ h2 {
 # --- 2. WHO ARE WE ---
 
 # 1. Center the title using columns
-col_title_left, col_title_center, col_title_right = st.columns([1, 2, 1])
+col_title_left, col_title_center, col_title_right = st.columns([0.1, 4, 0.1])
 
 with col_title_center:
     st.title("One Mission: Empowering Your Everyday")
@@ -49,19 +49,17 @@ col_margin_left, col_text_main, col_margin_right = st.columns([0.5, 3, 0.5])
 
 with col_text_main:
     # This header is centered via the H2 CSS style block
-    st.header("Jagabot at your service")
+    st.header("Jagabot at your service!")
     
     # The Core Paragraph 
     about_paragraph = """
-    🎯 One Mission: Empowering Your Day
+    🎯 **One Mission: Empowering Your Day**
 
-Jagabot is Singapore’s intelligent environmental assistant, here transforming how you plan your everyday.
+Jagabot is Singapore’s intelligent environmental assistant, here transforming how you plan your everyday. We solve the common challenge of fragmented information: the public must currently navigate multiple sources—from the NEA app to various government advisories—for crucial details on weather, air quality (PSI), UV index, and dengue hotspots.
 
-We solve the common challenge of fragmented information: the public must currently navigate multiple sources—from the NEA app to various government advisories—for crucial details on weather, air quality (PSI), UV index, and dengue hotspots.
+**Our Solution**
 
-Our Solution
-
-Jagabot delivers context-aware advice through a sophisticated process:
+Jagabot delivers context-aware advice by:
 
 📊 Consolidating Data: Tapping into NEA's live APIs for real-time, environmental readings from an official source.
 
@@ -71,7 +69,7 @@ Jagabot delivers context-aware advice through a sophisticated process:
 
 📜 Integrating Guidance: Combining all environmental factors with official government guidelines and safety tips.
 
-This ensures you receive a highly contextual, timely, and personalized environmental overview, enabling you to proactively plan your schedule and confidently make contingency plans.
+This ensures you receive a highly contextual, timely, and personalized environmental report, enabling you to proactively plan your schedule and confidently make contingency plans!
 """
     st.markdown(about_paragraph)
 
