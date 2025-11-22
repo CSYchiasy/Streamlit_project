@@ -24,7 +24,7 @@ h2 {
 col_title_left, col_title_center, col_title_right = st.columns([1, 2, 1])
 
 with col_title_center:
-    st.title("One Mission: Empowering Your Everyday)
+    st.title("One Mission: Empowering Your Everyday")
 
 st.markdown("---")
 
@@ -72,7 +72,7 @@ Jagabot delivers context-aware advice through a sophisticated process:
 📜 Integrating Guidance: Combining all environmental factors with official government guidelines and safety tips.
 
 This ensures you receive a highly contextual, timely, and personalized environmental overview, enabling you to proactively plan your schedule and confidently make contingency plans.
-    """
+"""
     st.markdown(about_paragraph)
 
 # --- 3. FOOTER ---

@@ -146,7 +146,7 @@ def chatbot_interface():
     col1, col2 = st.columns([4, 1])
     
     with col1:
-        st.title("☀️ SteadyDayEveryday with Jagabot")
+        st.title("☀️ SteadyDayEveryday with Jagabot ☀️")
         st.markdown("Here to jaga your day!")
     
     with col2:
