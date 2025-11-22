@@ -190,6 +190,20 @@ def chatbot_interface():
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
+    
+    # --- 5. User Instructions (NEW ADDITION) ---
+    # Add a prominent box instructing the user on how to query
+    st.markdown(
+        """
+        <div class="prompt-hint">
+        **💡 How to Query:** For the best results, please specify the **time, date **, **region** and intended activity.
+        <br>
+        *Example: "I am planning to **have a picnic** in **Jurong** at **3 PM tomorrow**?"*
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     # --- 5. Handle User Input ---
     default_prompt = "I am planning to go dragonboating at Kallang tomorrow around 11am. What should I be aware of?"
     if prompt := st.chat_input(default_prompt):
