@@ -29,8 +29,7 @@ with col_title_center:
     # and thus, centered on the page.
     st.markdown(
         """
-        <h1 style='text-align: center;'>One Mission:
-        Empowering Your Everyday</h1>
+        <h1 style='text-align: center;'Jagabot at your service!</h1>
         """, 
         unsafe_allow_html=True
     )
@@ -56,8 +55,6 @@ st.markdown("##") # Adds space below the image
 col_margin_left, col_text_main, col_margin_right = st.columns([0.5, 3, 0.5])
 
 with col_text_main:
-    # This header is centered via the H2 CSS style block
-    st.header("Jagabot at your service!")
     
     # The Core Paragraph 
     about_paragraph = """
