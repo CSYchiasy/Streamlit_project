@@ -173,7 +173,7 @@ def chatbot_interface():
         st.markdown(
             # Using h1 tag with CSS to ensure centering and large font
             """
-            <h1 style='text-align: center;'>One Mission: Empowering Your Everyday</h1>
+            <h1 style='text-align: center;'>#SteadyDayEveryday with Jagabot</h1>
             """, 
             unsafe_allow_html=True
         )
