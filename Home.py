@@ -144,7 +144,7 @@ def chatbot_interface():
         <div class="prompt-hint">
             <b>💡 How to Query:</b> For the best results, please specify the <b>time, date</b> (if a forecast), <b>region</b>, and intended activity.
             <br>
-            <i>Example: "I am planning to <b>have a picnic</b> in <b>Jurong</b> at <b>3 PM tomorrow</b>?"</i>
+            <i>Example: "I am planning to have a picnic in Jurong at 3 PM tomorrow?"</i>
         </div>
         """,
         unsafe_allow_html=True
