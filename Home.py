@@ -43,8 +43,10 @@ st.markdown("""
     /* Custom style for the prompt hint (Instructions box) */
     .prompt-hint {
         padding: 10px;
-        /* FIX: Removed max-width and auto margins to make it full width (same size as input) */
-        width: 100%; 
+        /* FIX: Added max-width and margins for centering */
+        max-width: 800px; /* Limit width so it doesn't span full page */
+        margin-left: auto;
+        margin-right: auto;
         /* END FIX */
         
         /* REDUCED MARGINS for better fit above chat input */
@@ -129,7 +131,7 @@ def check_password():
     col_left, col_center, col_right = st.columns([1, 1, 1])
     
     with col_center:
-        st.title("Portal Access")
+        st.title("SteadyDayEveryday with Jagabot")
         st.subheader("Login Required")
         st.text_input(
             "Enter Password", type="password", on_change=password_entered, key="password"
@@ -208,7 +210,7 @@ def chatbot_interface():
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
-    # --- 5. User Instructions (Full Width and HTML Fix) ---
+    # --- 5. User Instructions (Centralized and HTML Fix) ---
     st.markdown(
         """
         <div class="prompt-hint">
@@ -219,3 +221,61 @@ def chatbot_interface():
         """,
         unsafe_allow_html=True
     )
+    
+    # --- 6. Chat Input and Logic ---
+    if prompt := st.chat_input("Ask about the weather, PSI, UV, or dengue risk..."):
+        # Add user message to history
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        
+        # Display the user message
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        # Display the "Generating..." spinner
+        with st.chat_message("assistant"):
+            with st.spinner("Generating detailed environmental report..."):
+                # Run the RAG query logic
+                try:
+                    result = run_rag_query(
+                        user_query=prompt, 
+                        retriever=retriever, 
+                        historical_psi_df=historical_psi_df, 
+                        historical_uv_df=historical_uv_df, 
+                        llm=llm
+                    )
+                    
+                    response_content = result["response"]
+                    
+                    # Update status flags for the sidebar display
+                    st.session_state.last_statuses["Weather"] = result["weather_status"]
+                    st.session_state.last_statuses["PSI"] = result["psi_status"]
+                    st.session_state.last_statuses["UV"] = result["uv_status"]
+                    st.session_state.last_statuses["Dengue"] = result["dengue_status"]
+                    
+                    st.markdown(response_content)
+                
+                except Exception as e:
+                    error_message = f"An error occurred while fetching data or generating a response: {e}"
+                    st.error(error_message)
+                    response_content = error_message 
+
+        # Add assistant response to history
+        st.session_state.messages.append({"role": "assistant", "content": response_content})
+        # Rerun to clear the spinner and finalize the display
+        st.rerun()
+
+    # --- 7. Footer ---
+    st.markdown("""
+        <div class="footer">
+            🌍 SteadyDayEveryday | Portal access is restricted to authorized users.
+        </div>
+    """, unsafe_allow_html=True)
+
+# ====================================================================================
+# MAIN APP EXECUTION
+# ====================================================================================
+    
+if not check_password():
+    st.stop()
+    
+chatbot_interface()
