@@ -49,7 +49,8 @@ st.markdown("""
         border-radius: 8px;
         background-color: #f0f2f6; /* Light gray background */
         border-left: 5px solid #007bff; /* Blue accent bar */
-        font-size: 0.95em;
+        /* FIX: Increased font size for better visibility */
+        font-size: 1.1em; 
     }
     </style>
     """, unsafe_allow_html=True)
@@ -118,7 +119,7 @@ def chatbot_interface():
     # --- 3. Sidebar Enhancements (RE-ADDED) ---
     st.sidebar.button("Logout", on_click=logout)
     st.sidebar.markdown("---")
-    st.sidebar.subheader("Live API Status 🌐")
+    st.sidebar.subheader("Live Data Status 🌐")
     
     # Display the status indicators based on the last query
     display_api_status("Weather Forecast", st.session_state.last_statuses["Weather"])
