@@ -131,7 +131,7 @@ def check_password():
     col_left, col_center, col_right = st.columns([1, 1, 1])
     
     with col_center:
-        st.title("Portal Access")
+        st.title("SteadyDayEveryday with Jagabot")
         st.subheader("Login Required")
         st.text_input(
             "Enter Password", type="password", on_change=password_entered, key="password"
