@@ -21,10 +21,18 @@ h2 {
 # --- 2. WHO ARE WE ---
 
 # 1. Center the title using columns
-col_title_left, col_title_center, col_title_right = st.columns([0.1, 4, 0.1])
+col_title_left, col_title_center, col_title_right = st.columns([0.4, 1, 0.4])
 
 with col_title_center:
-    st.title("One Mission: Empowering Your Everyday")
+    # Use st.markdown with CSS to force the text-align to center, 
+    # ensuring the title is centered within the middle column (col_title_center), 
+    # and thus, centered on the page.
+    st.markdown(
+        """
+        <h1 style='text-align: center;'>One Mission: Empowering Your Everyday</h1>
+        """, 
+        unsafe_allow_html=True
+    )
 
 st.markdown("---")
 
