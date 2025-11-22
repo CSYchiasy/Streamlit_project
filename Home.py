@@ -146,8 +146,8 @@ def chatbot_interface():
     col1, col2 = st.columns([4, 1])
     
     with col1:
-        st.title("☀️ SteadyDayEveryday")
-        st.markdown("Jagabot here to jaga your day!")
+        st.title("☀️ SteadyDayEveryday with Jagabot")
+        st.markdown("Here to jaga your day!")
     
     with col2:
         # Overall Status Light 
@@ -165,7 +165,7 @@ def chatbot_interface():
     col_img_left, col_img_center, col_img_right = st.columns([3, 1, 1]) 
     
     with col_img_left:
-        st.image("jagabotwmap.png", width=350) 
+        st.image("jagabotwmap.png", use_column_width="always")
         
     st.markdown("---")
     
