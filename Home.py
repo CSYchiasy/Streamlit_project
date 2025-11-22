@@ -102,13 +102,24 @@ def chatbot_interface():
     with col_image_center:
         # The image will now be centered in the middle column and use its full width 
         st.image("jagabotwmap.png", use_column_width="always") 
+
+    # --- 3. Sidebar Enhancements ---
+    st.sidebar.button("Logout", on_click=logout)
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Live Data Status 🌐")
     
-    # --- 3. Chat History Display ---
+    # Display the status indicators based on the last query
+    display_api_status("Weather Forecast", st.session_state.last_statuses["Weather"])
+    display_api_status("PSI Index", st.session_state.last_statuses["PSI"])
+    display_api_status("UV Index", st.session_state.last_statuses["UV"])
+    display_api_status("Dengue Clusters", st.session_state.last_statuses["Dengue"])
+    
+    # --- 4. Chat History Display ---
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # --- 4. User Instructions (FIXED: Converting Markdown to HTML for guaranteed styling) ---
+    # --- 5. User Instructions (FIXED: Converting Markdown to HTML for guaranteed styling) ---
     st.markdown(
         """
         <div class="prompt-hint">
@@ -120,7 +131,7 @@ def chatbot_interface():
         unsafe_allow_html=True
     )
     
-    # --- 5. Chat Input and Logic ---
+    # --- 6. Chat Input and Logic ---
     if prompt := st.chat_input("Ask about the weather, PSI, UV, or dengue risk..."):
         # Add user message to history
         st.session_state.messages.append({"role": "user", "content": prompt})
@@ -168,7 +179,7 @@ def chatbot_interface():
         # Rerun to clear the spinner and finalize the display
         st.rerun()
 
-    # --- 6. Footer ---
+    # --- 7. Footer ---
     st.markdown("""
         <div class="footer">
             🌍 SteadyDayEveryday | Portal access is restricted to authorized users.
