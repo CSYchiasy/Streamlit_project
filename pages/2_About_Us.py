@@ -56,13 +56,13 @@ col_margin_left, col_text_main, col_margin_right = st.columns([0.5, 3, 0.5])
 
 with col_text_main:
     
-    # The Core Paragraph 
+    # The Core Paragraph (FIXED: Using <h2> and <h3> with inline styles for larger font)
     about_paragraph = """
-    🎯 **One Mission: Empowering Your Day**
+    <h2 style='font-size: 2.5em; color: #007bff; margin-bottom: 0px;'>🎯 One Mission: Empowering Your Day</h2>
 
 Jagabot is Singapore’s intelligent environmental assistant, here transforming how you plan your everyday. We solve the common challenge of fragmented information: the public must currently navigate multiple sources—from the NEA app to various government advisories—for crucial details on weather, air quality (PSI), UV index, and dengue hotspots.
 
-**Our Solution**
+<h3 style='font-size: 1.8em; margin-top: 20px;'>Our Solution</h3>
 
 Jagabot delivers context-aware advice by:
 
@@ -76,7 +76,7 @@ Jagabot delivers context-aware advice by:
 
 This ensures you receive a highly contextual, timely, and personalized environmental report, enabling you to proactively plan your schedule and confidently make contingency plans!
 """
-    st.markdown(about_paragraph)
+    st.markdown(about_paragraph, unsafe_allow_html=True) # NOTE: unsafe_allow_html=True is necessary here!
 
 # --- 3. FOOTER ---
 st.markdown("---")
