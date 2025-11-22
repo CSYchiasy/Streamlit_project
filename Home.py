@@ -44,7 +44,7 @@ st.markdown("""
     .prompt-hint {
         padding: 10px;
         /* FIX: Added max-width and margins for centering */
-        max-width: 800px; /* Limit width so it doesn't span full page */
+        width: 100%
         margin-left: auto;
         margin-right: auto;
         /* END FIX */
