@@ -40,7 +40,7 @@ st.markdown("---")
 # --- IMAGE BLOCK: Streamlit Native Centering and Sizing (FINAL FIX) ---
 
 # 1. Use columns to center the image block.
-col_img_left, col_img_center, col_img_right = st.columns([1, 1, 1]) 
+col_img_left, col_img_center, col_img_right = st.columns([1, 3, 1]) 
 
 with col_img_center:
     # 2. Use 'use_column_width="always"' for maximum sharpness and automatic sizing within the narrow center column.
