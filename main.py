@@ -180,33 +180,6 @@ def chatbot_interface():
     display_api_status("UV Index", st.session_state.last_statuses["UV"])
     display_api_status("Dengue Clusters", st.session_state.last_statuses["Dengue"])
     
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### ℹ️ About")
-    st.sidebar.markdown("""
-    **SteadyDayEveryday** helps you stay informed about environmental conditions in Singapore.
-    
-    **Features:**
-    - Real-time weather forecasts
-    - Air quality (PSI) readings
-    - UV index information
-    - Dengue alert levels
-    - Personalized health advice
-    
-    **Data Sources:**
-    - NEA (National Environment Agency)
-    - Weather APIs
-    - Historical climate data
-    """)
-    
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### 📝 Example Queries")
-    st.sidebar.markdown("""
-    - "How's the weather in the west?"
-    - "What's the PSI like today?"
-    - "Should I go jogging tomorrow afternoon?"
-    - "Are there any dengue alerts?"
-    - "What's the UV index now?"
-    """)
 
     # --- 4. Chat History Container (Main Content Area) ---
     chat_container = st.container(height=550) 
