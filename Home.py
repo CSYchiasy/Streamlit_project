@@ -107,15 +107,14 @@ def chatbot_interface():
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
-
-    # --- 4. User Instructions (FIXED: Refined content for better visual flow and placement) ---
-    # Add a prominent box instructing the user on how to query
+            
+    # --- 4. User Instructions (FIXED: Converting Markdown to HTML for guaranteed styling) ---
     st.markdown(
         """
         <div class="prompt-hint">
-        **💡 How to Query:** For the best results, please specify the **time, date** (if a forecast), **region**, and intended activity.
-        <br>
-        *Example: "I am planning to **have a picnic** in **Jurong** at **3 PM tomorrow**?"*
+            <b>💡 How to Query:</b> For the best results, please specify the <b>time, date</b> (if a forecast), <b>region</b>, and intended activity.
+            <br>
+            <i>Example: "I am planning to <b>have a picnic</b> in <b>Jurong</b> at <b>3 PM tomorrow</b>?"</i>
         </div>
         """,
         unsafe_allow_html=True
