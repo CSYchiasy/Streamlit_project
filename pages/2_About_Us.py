@@ -3,7 +3,7 @@ import os
 
 # --- 1. CONFIGURATION ---
 st.set_page_config(
-    page_title="#SteadyDayEveryday with Jagabot",
+    page_title="☀️SteadyDayEveryday with Jagabot☀️",
     layout="wide",
 )
 
@@ -24,7 +24,7 @@ h2 {
 col_title_left, col_title_center, col_title_right = st.columns([1, 2, 1])
 
 with col_title_center:
-    st.title("💡 SteadyDayEveryday with Jagabot")
+    st.title("One Mission: Empowering Your Everyday)
 
 st.markdown("---")
 
@@ -49,16 +49,29 @@ col_margin_left, col_text_main, col_margin_right = st.columns([0.5, 3, 0.5])
 
 with col_text_main:
     # This header is centered via the H2 CSS style block
-    st.header("Your Environmental Assistant")
+    st.header("Jagabot at your service")
     
     # The Core Paragraph 
     about_paragraph = """
-    **#SteadyDayEveryday** with Jagabot who is your intelligent environmental assistant, designed to simplify daily planning and enhance safety for individuals in Singapore. 
-    We tackle the challenge of fragmented information—where users currently have to check multiple sources like the NEA app and various government websites for crucial details 
-    on weather, air quality, UV index, and dengue hotspots. 
-    Our solution consolidates this data by tapping into **NEA's live APIs** for real-time readings, and historical records for forecast estimates which is then supplemented with a knowledge base of 
-    government advisories, tips and guidelines using **Hybrid Retrieval-Augmented Generation (RAG)**. 
-    This powerful combination ensures you receive a comprehensive, timely, and personalized information, allowing you to proactively plan your activities and make contingency plans with confidence.
+    🎯 One Mission: Empowering Your Day
+
+Jagabot is Singapore’s intelligent environmental assistant, here transforming how you plan your everyday.
+
+We solve the common challenge of fragmented information: the public must currently navigate multiple sources—from the NEA app to various government advisories—for crucial details on weather, air quality (PSI), UV index, and dengue hotspots.
+
+Our Solution
+
+Jagabot delivers context-aware advice through a sophisticated process:
+
+📊 Consolidating Data: Tapping into NEA's live APIs for real-time, environmental readings from an official source.
+
+📈 Enhancing Forecasts: Supplementing live data with historical records to generate reliable forecast estimates for the coming days.
+
+📍 Focusing on Context: Crucially, Jagabot automatically analyzes your specific date, time, and target region (e.g., Jurong, East Coast) from your query to ensure location-aware and timely advice.
+
+📜 Integrating Guidance: Combining all environmental factors with official government guidelines and safety tips.
+
+This ensures you receive a highly contextual, timely, and personalized environmental overview, enabling you to proactively plan your schedule and confidently make contingency plans.
     """
     st.markdown(about_paragraph)
 
