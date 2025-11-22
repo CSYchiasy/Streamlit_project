@@ -43,6 +43,12 @@ st.markdown("""
     /* Custom style for the prompt hint (Instructions box) */
     .prompt-hint {
         padding: 10px;
+        /* FIX: Added max-width and margins for centering */
+        max-width: 800px; /* Limit width so it doesn't span full page */
+        margin-left: auto;
+        margin-right: auto;
+        /* END FIX */
+        
         /* REDUCED MARGINS for better fit above chat input */
         margin-top: 10px; 
         margin-bottom: 10px; 
@@ -132,7 +138,7 @@ def chatbot_interface():
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # --- 5. User Instructions (FIXED: Converting Markdown to HTML for guaranteed styling) ---
+    # --- 5. User Instructions (Centralized and HTML Fix) ---
     st.markdown(
         """
         <div class="prompt-hint">
