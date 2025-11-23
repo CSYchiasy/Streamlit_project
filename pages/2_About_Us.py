@@ -82,6 +82,21 @@ This ensures you receive a highly contextual, timely, and personalized environme
 """
     st.markdown(about_paragraph, unsafe_allow_html=True)
 
+        # --- NEW: DISCLAIMER SECTION ---
+    st.markdown("##") # Add spacing before the disclaimer
+    disclaimer_section = """
+    <div style='border: 1px solid #ffcc00; padding: 15px; border-radius: 8px; background-color: #fffacd;'>
+        <h3 style='font-size: 1.5em; color: #b8860b; margin-top: 0px;'>💡 Important Notice</h3>
+        <p style='font-size: 0.95em; margin-bottom: 0px;'>
+        This web application is a protoype developed for educational purposes only. The environmental and health advice provided by Jagabot 
+        is intended for informational and planning purposes only. While we source data from authoritative bodies like the NEA, 
+        this tool is not a substitute for official government alerts, professional medical advice, or exercising personal caution. 
+        Please be aware that the LLM may also generate inaccurate or incorrect information. 
+        </p>
+    </div>
+    """
+    st.markdown(disclaimer_section, unsafe_allow_html=True)
+
 # --- 3. FOOTER ---
 st.markdown("---")
 st.markdown("© 2025 SteadyDayEveryday Project")
