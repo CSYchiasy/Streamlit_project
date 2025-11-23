@@ -24,9 +24,6 @@ h2 {
 col_title_left, col_title_center, col_title_right = st.columns([0.4, 1, 0.4])
 
 with col_title_center:
-    # Use st.markdown with CSS to force the text-align to center, 
-    # ensuring the title is centered within the middle column (col_title_center), 
-    # and thus, centered on the page.
     st.markdown(
         """
         <h1 style='text-align: center;'>Jagabot at your service!</h1>
@@ -36,7 +33,7 @@ with col_title_center:
 
 st.markdown("---")
 
-# --- IMAGE BLOCK: Streamlit Native Centering and Sizing (FINAL FIX) ---
+# --- IMAGE BLOCK ---
 
 # 1. Use columns to center the image block.
 col_img_left, col_img_center, col_img_right = st.columns([1, 3, 1]) 
@@ -49,7 +46,7 @@ with col_img_center:
 st.markdown("##") # Adds space below the image
 
 
-# --- TEXT CONTENT (BELOW THE IMAGE) ---
+# --- TEXT CONTENT---
 
 # Use columns for the main text body to create a centered reading area
 col_margin_left, col_text_main, col_margin_right = st.columns([0.5, 3, 0.5])
@@ -75,8 +72,15 @@ Jagabot delivers context-aware advice by:
 📜 Integrating Guidance: Combining all environmental factors with official government guidelines and safety tips.
 
 This ensures you receive a highly contextual, timely, and personalized environmental report, enabling you to proactively plan your schedule and confidently make contingency plans!
+
+<h3 style='font-size: 1.8em; margin-top: 20px;'>Data Sources</h3>
+
+ℹ️ Guidelines and advisories from Meteorological Service Singapore (MSS), National Environmental Agency (NEA) and Health Hub Singapore.
+
+🔗 Live and historical data from National Environmental Agency (NEA)
+
 """
-    st.markdown(about_paragraph, unsafe_allow_html=True) # NOTE: unsafe_allow_html=True is necessary here!
+    st.markdown(about_paragraph, unsafe_allow_html=True)
 
 # --- 3. FOOTER ---
 st.markdown("---")
