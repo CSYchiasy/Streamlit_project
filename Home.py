@@ -203,7 +203,7 @@ def chatbot_interface():
     # --- 4. Chat History Display (FIXED: Using fixed-height container) ---
     # By placing the chat history inside a fixed-height container, it scrolls, 
     # ensuring the input box and instructions remain visible below it.
-    chat_container = st.container(height=300) 
+    chat_container = st.container(height=500) 
     
     with chat_container:
         for message in st.session_state.messages:
